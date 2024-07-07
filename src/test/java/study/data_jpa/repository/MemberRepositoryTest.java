@@ -11,6 +11,7 @@ import study.data_jpa.entity.Member;
 import study.data_jpa.entity.Team;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -139,6 +140,23 @@ public class MemberRepositoryTest {
         for (Member member : result) {
             System.out.println("member = " + member);
         }
+    }
+
+    @Test
+    public void returnType(){
+        Member member1 = new Member("AAA",10);
+        Member member2 = new Member("BBB",20);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        List<Member> result = memberRepository.findListByUsername("AAA");
+        System.out.println("result = " + result); // 값이 없으면 빈 리스트 반환
+
+        Member result2 = memberRepository.findMemberByUsername("AAA");
+        System.out.println("result2 = " + result2); // 없으면 null 값 반환, 2개 이상이면 예외 발생
+
+        Optional<Member> result3 = memberRepository.findOptionalByUsername("AAA");
+        System.out.println("result3 = " + result3); // 값이 없으면 Optional.empty 반환, 2개 이상이면 예외 발생
     }
 
 }
