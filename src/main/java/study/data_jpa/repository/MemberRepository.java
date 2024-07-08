@@ -2,6 +2,7 @@ package study.data_jpa.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,4 +45,23 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 //  -> clearAutomatically = true 로 설정 (영속성 컨텍스트 초기화)
     @Query(value = "update Member m set m.age = m.age + 1 where m.age >= :age")
     int bulkAgePlus(@Param("age") int age);
+
+
+    @Query("select m from Member m join fetch m.team")
+    List<Member> findMemberFetchJoin(); // 가장 기본 fetch join 문
+
+    @Override
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findAll();  // 1. 공통 매서드 오버라이드
+
+    @EntityGraph(attributePaths = {"team"})
+    @Query("select m from Member m")
+    List<Member> findMemberEntityGraph(); // 2. JPQL + 엔티티 그래프
+
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findMemberFetchJoinByUsername(String username); // 3. 메서드 이름으로 쿼리에서 특히 편리.
+
+    @EntityGraph("Member.all")
+    @Query("select m from Member m")
+    List<Member> findMemberNamedEntityGraph(); // 4. NamedEntityGraph 사용
 }
