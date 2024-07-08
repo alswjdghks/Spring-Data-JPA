@@ -222,4 +222,18 @@ public class MemberRepositoryTest {
             member.getTeam().getName();
         }
     }
+
+    @Test
+    public void queryHint() {
+        Member member1 = new Member("member1",10);
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2"); // 영속성 컨텍스트에서 변경을 감지못함.
+
+        em.flush();
+    }
+
 }
