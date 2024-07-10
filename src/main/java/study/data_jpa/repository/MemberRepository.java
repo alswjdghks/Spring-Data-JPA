@@ -72,4 +72,10 @@ public interface MemberRepository extends JpaRepository<Member, Long>,MemberRepo
     Member findReadOnlyByUsername(String name);
 
     <T>List<T> findProjectionsByUsername(@Param("username") String username, Class<T> type);
+
+    @Query(value = "SELECT m.member_id as id, m.username, t.name as teamName " +
+            "FROM member m left join team t ON m.team_id = t.team_id",
+            countQuery = "SELECT count(*) from member",
+            nativeQuery = true)
+    Page<MemberProjection> findByNativeProjection(Pageable pageable);
 }
