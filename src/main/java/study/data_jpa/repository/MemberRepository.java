@@ -70,4 +70,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>,MemberRepo
     // Transactional 에서의 readOnly : 트랜잭션 전체에 적용되어 해당 트랜잭션 내의 모든 DB 작업에 영향을 미침
     // QueryHint : 특정 쿼리에서만 적용되어 해당 쿼리로 부터 반환된 엔티티에만 영향을 미친다. -> 읽기전용 모드로 설정된 엔티티는 영속성 컨텍스트에서 변경이 감지되지 않는다.
     Member findReadOnlyByUsername(String name);
+
+    <T>List<T> findProjectionsByUsername(@Param("username") String username, Class<T> type);
 }
